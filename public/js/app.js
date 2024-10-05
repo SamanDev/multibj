@@ -552,19 +552,19 @@ function finalCompareGo() {
   } else if (theClient.blackjack === true) {
     // youWin.play();
     $("#player-result-big-answer").text("BLACKJACK");
-    $("#player-result-big-sum").text(doCurrency(theClient.win));
+    $("#player-result-big-sum").text(doCurrency(1.5 * theClient.bet + theClient.bet));
     $("#player-result-big-plus-minus").text("+");
     $("#player-result-sum-box").addClass("color-green");
   } else if (dealer.sum > 21) {
     // youWin.play();
     $("#player-result-big-answer").text("YOU WIN");
-    $("#player-result-big-sum").text(doCurrency(theClient.win));
+    $("#player-result-big-sum").text(doCurrency(theClient.bet * 2));
     $("#player-result-big-plus-minus").text("+");
     $("#player-result-sum-box").addClass("color-green");
   } else if (dealer.sum < theClient.sum) {
     // youWin.play();
     $("#player-result-big-answer").text("YOU WIN");
-    $("#player-result-big-sum").text(doCurrency(theClient.win));
+    $("#player-result-big-sum").text(doCurrency(theClient.bet * 2));
     $("#player-result-big-plus-minus").text("+");
     $("#player-result-sum-box").addClass("color-green");
   } else if (dealer.sum === theClient.sum) {
