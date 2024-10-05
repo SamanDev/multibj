@@ -1205,7 +1205,7 @@ $("#invite-link").hover(
 );
 
 function exitRoom() {
-  location.reload();
+  window.location = "/";
 }
 
 // ########## DOM MANIPULATION ##########

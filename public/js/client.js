@@ -99,29 +99,32 @@ window.addEventListener("load", function () {
     $("#btnCreate").removeClass("noclick-nohide");
     $("#btnOffline").removeClass("noclick-nohide");
     // ***
-    btnJoin.addEventListener("click", (e) => {
-      $("#loading-screen").removeClass("hide-element");
-      const payLoadLength = {
-        method: "playersLength",
-        gameId: gameId,
-      };
-      ws.send(JSON.stringify(payLoadLength));
-      // Set 50ms delay so above method response before below function starts
-      setTimeout(function () {
-        if (playersLength >= 7) {
-          $("#loading-screen").addClass("hide-element");
-          alert("Game Is full!");
-          return;
-        } else {
-          playerJoin();
-          setTimeout(function () {
+    if(1==1){
+      btnJoin.addEventListener("click", (e) => {
+        $("#loading-screen").removeClass("hide-element");
+        const payLoadLength = {
+          method: "playersLength",
+          gameId: gameId,
+        };
+        ws.send(JSON.stringify(payLoadLength));
+        // Set 50ms delay so above method response before below function starts
+        setTimeout(function () {
+          if (playersLength >= 7) {
             $("#loading-screen").addClass("hide-element");
-            $("#main-menu").addClass("hide-element");
-            $("#game-room").removeClass("hide-element");
-          }, 250);
-        }
-      }, 50);
-    });
+            alert("Game Is full!");
+            return;
+          } else {
+            playerJoin();
+            setTimeout(function () {
+              $("#loading-screen").addClass("hide-element");
+              $("#main-menu").addClass("hide-element");
+              $("#game-room").removeClass("hide-element");
+            }, 250);
+          }
+        }, 50);
+      });
+    }
+   
 
     btnCreate.addEventListener("click", (e) => {
       $("#loading-screen").removeClass("hide-element");
@@ -456,7 +459,11 @@ const pathArr2 = loc2.pathname.toString().split("/");
   }
   
 });
-
+function goto(roomID){
+  console.log("Goto", roomID);
+  window.location = roomID
+  //window.history.pushState("game","Title","/" + (roomID))
+}
 ws.onmessage = (message) => {
   // message.data
   const response = JSON.parse(message.data);
@@ -465,13 +472,20 @@ ws.onmessage = (message) => {
     clientId = response.clientId;
     theClient = response.theClient;
     if(response.rooma.length && window.location.href != response.rooma[0].room){
+    for (let i = 0; i < response.rooma.length; i++) {
+      var roomID = response.rooma[i].room;
+      roomId = roomID.substring(roomID.length - 6);
+      $("#main-box").append(`<div><button onclick="goto('` + roomID +`')" class="play-btns">Join `+response.rooma[i].players+`/7 Players<br/>`+roomId+`</button></div>`
+      );
+    
+    }
+   
       
-      window.location.href = response.rooma[0].room;
     }
     if (window.location.href.length - 1 > window.origin.length) {
      
       setTimeout(function() {
-       // $("#btnJoin").trigger("click");
+        $("#btnJoin").trigger("click");
       },1000)
     }else{
       setTimeout(function() {

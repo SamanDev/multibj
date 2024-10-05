@@ -259,8 +259,8 @@ body {
 #main-box .play-btns {
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
-  display: flex;
-  align-items: center;
+  
+  vertical-align: middle;
   margin: auto;
   width: 60%;
   padding: 6px 0;
@@ -269,6 +269,11 @@ body {
   border: none;
   cursor: pointer;
   border-radius: 4px;
+}
+#main-box button {
+  background:#0a0809;
+  font-size: 14px !important;
+  text-align:center
 }
 #main-box .play-btns span i {
   display: flex;
@@ -623,7 +628,7 @@ body {
   position: absolute;
   width: 260px;
   height: 42px;
-  right: 215px;
+  right: 75px;
   margin-top: 10px;
   z-index: 200;
   display: flex;
@@ -1230,8 +1235,7 @@ i {
   /* IE 10+ and Edge */
   user-select: none;
   /* Standard syntax */
-  transform: scale(.6);
-  transform-origin: top;
+  
 }
 #dealer h1 {
   display: flex;
@@ -1390,7 +1394,7 @@ i {
   /* IE 10+ and Edge */
   user-select: none;
   /* Standard syntax */
-  transform: scale(.4);
+  
 }
 .user-action-container .user-action-text {
   pointer-events: none;
@@ -1651,6 +1655,15 @@ i {
     width: 50px;
     height: 50px;
     font-size: 12px;
+  }
+  .user-action-container {
+    
+    transform: scale(.4);
+  }
+  #dealer {
+   
+    transform: scale(.6);
+    transform-origin: top;
   }
 }
 @media all and (max-width: 576px) {
