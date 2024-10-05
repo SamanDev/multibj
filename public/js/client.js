@@ -488,7 +488,7 @@ ws.onmessage = (message) => {
      
       setTimeout(function() {
         $("#btnJoin").trigger("click");
-      },1000)
+      },2000)
     }else{
       setTimeout(function() {
        // $("#btnCreate").trigger("click");
