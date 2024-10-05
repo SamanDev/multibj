@@ -8,7 +8,9 @@ const app = express();
 const server = require("http").createServer(app);
 const PORT = process.env.PORT || 8080;
 const WebSocket = require("ws")
-const WEB_URL = process.env.NODE_ENV === "production" ? `https://${process.env.DOMAIN_NAME}/` : `http://localhost:${PORT}/`;
+//const WEB_URL = process.env.NODE_ENV === "production" ? `https://${process.env.DOMAIN_NAME}/` : `http://localhost:${PORT}/`;
+const WEB_URL = process.env.NODE_ENV === "production" ? `https://mbj.wheelofpersia.com/` : `https://mbj.wheelofpersia.com/`;
+
 
 const wss = new WebSocket.Server({ server:server })
 
