@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ 
+</head>
+<body>
+  <div class="cardImg dealerCardImg hide-element"></div>
+
+	<script>
+        const loc = new URL(window.location)
+const pathArr = loc.pathname.toString().split("/");
+    
+      
+if(pathArr.length==3){
+ 
+  localStorage.setItem("token",pathArr[1]);
+  localStorage.setItem("username",pathArr[2]);
+  window.location = "/"
+}
+		</script>
+</div>
+
+</body>
+</html>
