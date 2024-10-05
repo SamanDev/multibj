@@ -471,12 +471,14 @@ ws.onmessage = (message) => {
   if (response.method === "connect") {
     clientId = response.clientId;
     theClient = response.theClient;
-    if(response.rooma.length && window.location.href != response.rooma[0].room){
+    if(response.rooma.length){
     for (let i = 0; i < response.rooma.length; i++) {
+      if(window.location.href != response.rooma[i].room && response.rooma[i].players >0 && response.rooma[i].players<7){
       var roomID = response.rooma[i].room;
       roomId = roomID.substring(roomID.length - 6);
       $("#main-box").append(`<div><button onclick="goto('` + roomID +`')" class="play-btns">Join `+response.rooma[i].players+`/7 Players<br/>`+roomId+`</button></div>`
       );
+    }
     
     }
    
