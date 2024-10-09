@@ -251,7 +251,7 @@ function playerBets() {
         theClient.bet = theClient.bet + betAmount;
         theClient.balance = theClient.balance - betAmount;
       } else {
-        alert("Need more balance");
+        window.parent.postMessage("opendeposit", "*");
       }
     });
   }
@@ -660,21 +660,7 @@ function dealerWin(i) {
 }
 
 function resetGame() {
-  // Assign players balance to the list
-  for (let i = 0; i < spectators.length; i++) {
-    for (let x = 0; x < players.length; x++) {
-      if (spectators[i].clientId === players[x].clientId) {
-        spectators[i].balance = players[x].balance;
-      }
-    }
-    $(".users-list-balance:eq(" + i + ")").text(spectators[i].balance);
-    if (spectators[i].balance === 0) {
-      $(".users-list-balance:eq(" + i + ")").addClass("color-red");
-    } else {
-      $(".users-list-balance:eq(" + i + ")").addClass("color-green");
-    }
-  }
-
+  
   terminatePlayerFromSlot();
 
   // We need to make a new for loop for the spectators because the players array is sorted by order & spectators array is not sorted
@@ -1174,7 +1160,7 @@ $(".max-clear").click(function () {
         for (let i = 0; i < playerSlotHTML.length; i++) {
           if (playerSlotHTML[i] === clientId) {
             if (theClient.balance === 0 && theClient.bet === 0) {
-              alert("Need more balance");
+              window.parent.postMessage("opendeposit", "*");
             } else {
               $(".ready:eq(" + i + ")").removeClass("hide-element");
             }
@@ -1242,6 +1228,7 @@ function showSlides(n) {
 
 // COUNTDOWN TIMER
 let spectatorsClone = [];
+
 function setTimer(duration) {
   spectatorsClone = spectators;
   let timer = duration,
