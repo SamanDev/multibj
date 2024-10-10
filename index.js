@@ -140,7 +140,7 @@ const createTable = (gameId, min, seats) => {
 
         dealer: {
             cards: [],
-
+            hiddencards: [],
             sum: null,
             hasAce: false,
             hasLeft: null,
@@ -217,7 +217,7 @@ function startBetTimer(gameId, blnStart) {
     const game = games.filter((game) => game.id === gameId)[0];
 
     if (blnStart) {
-        game.startTimer = 9;
+        game.startTimer = 4;
     } else {
         game.startTimer = game.startTimer - 1;
     }
@@ -286,7 +286,7 @@ function startDeal(gameId) {
         }
     });
     leftCard = leftCard + 1;
-    //addCardDealer(gameId, leftCard * 250);
+    addCardDealer(gameId, leftCard * 250);
     leftCard = leftCard + 1;
     game.players.map(function (player, playNum) {
         if (game.players[playNum]?.bet) {
@@ -298,7 +298,7 @@ function startDeal(gameId) {
     });
     leftCard = leftCard + 1;
 
-    addCardDealer(gameId, leftCard * 250);
+    addCardDealerfake(gameId, leftCard * 250);
 }
 function addCard(gameId, playNum, timeout) {
     setTimeout(() => {
@@ -328,9 +328,7 @@ function addCardDealer(gameId, timeout, compare) {
         game.dealer.cards.push(deck[0]);
         deck.shift();
         updateSumDeal(gameId);
-        if (game.dealer.cards.length == 1) {
-            game.gameOn = true;
-        }
+       
         if (game.dealer.sum == 21 && game.dealer.cards.length == 2) {
             game.dealer.blackjack = true;
             winLoseComponents(gameId);
@@ -341,6 +339,30 @@ function addCardDealer(gameId, timeout, compare) {
         if (game.dealer.sum < 17 && compare) {
             addCardDealer(gameId, timeout, compare);
         }
+
+        const payLoad = {
+            method: "tables",
+            games: games,
+        };
+        sendToAll(payLoad);
+        
+    }, timeout);
+}
+function addCardDealerfake(gameId, timeout, compare) {
+    setTimeout(() => {
+        const game = games.filter((game) => game.id === gameId)[0];
+        game.dealer.hiddencards.push({
+            "suit": "Back",
+            "value": {
+              "card": "0",
+              "value": 0
+            }
+          });
+      
+        updateSumDeal(gameId);
+        
+            game.gameOn = true;
+        
 
         const payLoad = {
             method: "tables",
@@ -532,9 +554,9 @@ wss.on("connection", (ws) => {
 
             const game = games.filter((game) => game.id === gameId)[0];
             var data = { gameName: "BlackjackMulti", data: [], id: idcode };
-            
-                data.data.push({ username:game.players[seat].nickname, bet1: game.players[seat].bet });
-            
+
+            data.data.push({ username: game.players[seat].nickname, bet1: game.players[seat].bet });
+
             changeBalance("gamesStartGame", data);
             game.players[seat].bet = game.players[seat].bet * 2;
             game.players[seat].isDouble = true;
@@ -543,8 +565,11 @@ wss.on("connection", (ws) => {
         if (result.method === "stand") {
             const gameId = result.gameId;
             const seat = result.seat;
-
-            updateCurrentPlayer(gameId, seat);
+            const game = games.filter((game) => game.id === gameId)[0];
+if(seat==game.currentPlayer){
+    updateCurrentPlayer(gameId, seat);
+}
+            
         }
         if (result.method === "leave") {
             const gameId = result.gameId;
@@ -560,43 +585,16 @@ wss.on("connection", (ws) => {
             };
             sendToAll(payLoad);
         }
-        if (result.method === "finalbet") {
-        }
 
-        if (result.method === "setNewBalance") {
-            const theClient = result.theClient;
-            const players = result.players;
-            const spectators = result.spectators;
+        if (result.method === "syncBalance") {
+            theClient.balance = result.balance;
 
             const payLoad = {
-                method: "setuser",
-                players: players,
+                method: "connect",
+
                 theClient: theClient,
             };
-            clients[clientId].ws.send(JSON.stringify(payLoad));
-        }
-
-        if (result.method === "resetGameState") {
-            const spectators = result.spectators;
-            const gameId = result.gameId;
-            const game = games.filter((game) => game.id === gameId);
-            const players = result.players;
-            game.players = players;
-
-            const payLoad = {
-                method: "resetGameState",
-                game: game,
-            };
-            var data = { gameName: "BlackjackMulti", data: [], id: idcode };
-            players.forEach((c) => {
-                if (c.win && c.win > 0) {
-                    data.data.push({ username: c.nickname, bet1: c.win });
-                }
-            });
-            spectators.forEach((c) => {
-                clients[c.clientId].ws.send(JSON.stringify(payLoad));
-            });
-            const _inc = changeBalance("gamesEndGame", data);
+            ws.send(JSON.stringify(payLoad));
         }
     });
     // The ClientId
