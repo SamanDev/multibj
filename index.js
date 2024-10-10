@@ -419,7 +419,7 @@ function winLoseComponents(gameId) {
         });
         game.dealer = {
             cards: [],
-            hiddenCard: [],
+            hiddencards: [],
             sum: null,
             hasAce: false,
             hasLeft: null,
