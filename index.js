@@ -217,7 +217,7 @@ function startBetTimer(gameId, blnStart) {
     const game = games.filter((game) => game.id === gameId)[0];
 
     if (blnStart) {
-        game.startTimer = 4;
+        game.startTimer = 9;
     } else {
         game.startTimer = game.startTimer - 1;
     }
@@ -518,13 +518,14 @@ wss.on("connection", (ws) => {
             if (game.players[seat].bet == 0) {
                 game.players[seat].bet = amount;
                 game.players[seat].balance = game.players[seat].balance - amount;
-                theClient.balance = game.players[seat].balance;
+                theClient.balance = theClient.balance - amount;
 
                 const userPayload = {
                     method: "connect",
                     theClient: theClient,
                 };
                 ws.send(JSON.stringify(userPayload));
+               
                 if (game.currentPlayer > seat) {
                     game.currentPlayer = seat;
                 }
@@ -587,14 +588,17 @@ if(seat==game.currentPlayer){
         }
 
         if (result.method === "syncBalance") {
-            theClient.balance = result.balance;
+            if(theClient?.nickname){
+                theClient.balance = result.balance;
 
-            const payLoad = {
-                method: "connect",
-
-                theClient: theClient,
-            };
-            ws.send(JSON.stringify(payLoad));
+                const payLoad = {
+                    method: "connect",
+    
+                    theClient: theClient,
+                };
+                ws.send(JSON.stringify(payLoad));
+            }
+           
         }
     });
     // The ClientId
